@@ -20,9 +20,9 @@ type Question = {
   id: number;
   area:
     | "Founder Dependency"
-    | "Mental Load"
-    | "Emotional Reality"
-    | "Team Alignment"
+    | "Founder Load"
+    | "Founder State"
+    | "Management Capability"
     | "Firefighting"
     | "Strategic Clarity"
     | "Founder Reality";
@@ -45,78 +45,78 @@ const questions: Question[] = [
   {
     id: 1,
     area: "Founder Dependency",
-    text: "If you step away from your business for a few days, what actually happens?",
+    text: "If you step away from your business for 5 days, what actually happens?",
     options: [
       { label: "Everything slows down or stops", value: 1 },
-      { label: "Things move, but I stay involved", value: 2 },
-      { label: "Team manages, I’m still backbone", value: 3 },
-      { label: "Business runs smoothly without me", value: 5 },
+      { label: "Things move, but I’m still involved remotely", value: 2 },
+      { label: "The team runs things, but I’m still the backbone", value: 3 },
+      { label: "The business runs without needing me", value: 5 },
     ],
   },
   {
     id: 2,
-    area: "Mental Load",
-    text: "How often does your business occupy your mind, even when you're not working?",
+    area: "Founder Load",
+    text: "Even when you’re not working, how much of your mind is still occupied by the business?",
     options: [
       { label: "Constantly — I can’t switch off", value: 1 },
-      { label: "Most of the time", value: 2 },
-      { label: "Sometimes", value: 3 },
-      { label: "Rarely — I have mental space", value: 5 },
+      { label: "Most of the time — it’s always in the background", value: 2 },
+      { label: "Sometimes — I get mental space", value: 3 },
+      { label: "Rarely — I’m fully disconnected outside work", value: 5 },
     ],
   },
   {
     id: 3,
-    area: "Emotional Reality",
-    text: "How does running your business feel right now?",
+    area: "Founder State",
+    text: "What does running your business actually feel like right now?",
     options: [
-      { label: "Exhausting and overwhelming", value: 1 },
-      { label: "Heavy and stressful", value: 2 },
-      { label: "Demanding but manageable", value: 3 },
-      { label: "Structured and in control", value: 5 },
+      { label: "Draining — it’s taking more than it’s giving", value: 1 },
+      { label: "Heavy — constant pressure and responsibility", value: 2 },
+      { label: "Demanding — but still manageable", value: 3 },
+      { label: "Structured — I feel in control", value: 5 },
     ],
   },
   {
     id: 4,
-    area: "Team Alignment",
-    text: "When you communicate your vision or expectations, what actually happens?",
+    area: "Management Capability",
+    text: "Your managers — how well do they actually run their departments?",
     options: [
-      { label: "Team doesn’t follow through", value: 1 },
-      { label: "Execution is inconsistent", value: 2 },
-      { label: "Some alignment exists", value: 3 },
-      { label: "Team is aligned and executes", value: 5 },
+      { label: "They depend on me for decisions and direction", value: 1 },
+      { label: "They try, but execution is inconsistent", value: 2 },
+      { label: "They handle some things, but they’re not fully reliable", value: 3 },
+      { label: "They run departments independently with clear ownership", value: 5 },
     ],
   },
   {
     id: 5,
     area: "Firefighting",
-    text: "How much of your time is spent solving problems instead of building the business?",
+    text: "Where does most of your time go right now?",
     options: [
-      { label: "Almost all my time", value: 1 },
-      { label: "More fixing than building", value: 2 },
-      { label: "Balanced between both", value: 3 },
-      { label: "Mostly growth and strategy", value: 5 },
+      { label: "Solving problems and fixing issues", value: 1 },
+      { label: "Managing people and following up", value: 2 },
+      { label: "A mix of execution and growth", value: 3 },
+      { label: "Mostly focused on growth and strategy", value: 5 },
     ],
   },
   {
     id: 6,
     area: "Strategic Clarity",
-    text: "How clear are you on the next phase of growth for your business?",
+    text: "When you think about the next phase of growth, what happens?",
     options: [
-      { label: "I feel lost or unclear", value: 1 },
-      { label: "Ideas, but no direction", value: 2 },
-      { label: "Clear, but hard to execute", value: 3 },
-      { label: "Clear plan and direction", value: 5 },
+      { label: "I feel unclear and unsure", value: 1 },
+      { label: "I have ideas, but no clear path", value: 2 },
+      { label: "I know what to do, but execution is slow", value: 3 },
+      { label: "I have a clear plan and direction", value: 5 },
     ],
   },
   {
     id: 7,
     area: "Founder Reality",
-    text: "Which statement feels closest to your current reality as a founder?",
+    text: "Which of these feels most true about your business today?",
     options: [
-      { label: "Business depends on me", value: 1 },
-      { label: "I carry most responsibility", value: 2 },
-      { label: "Systems exist, not reliable", value: 3 },
-      { label: "Business runs with ownership", value: 5 },
+      { label: "The business depends on me more than I expected", value: 1 },
+      { label: "I thought I could step back, but I can’t", value: 2 },
+      { label: "We have systems, but they don’t fully work", value: 3 },
+      { label: "The business runs with structure and ownership", value: 5 },
     ],
   },
 ];
@@ -127,11 +127,11 @@ function getResultType(score: number) {
       title: "Founder Under Strain",
       shortLabel: "High Urgency",
       summary:
-        "Your business appears to rely heavily on you to function. That usually creates constant mental load, inconsistent execution, and a level of stress that slowly drains both clarity and energy.",
+        "Your business is still relying heavily on you for direction, decisions, and execution. That creates pressure, inconsistency, and a level of mental load that is difficult to sustain.",
       insight:
-        "This is not just a growth problem. It is a founder-capacity problem. The business may be operating, but it is doing so at the cost of your peace, focus, and long-term sustainability.",
+        "This is not just a growth issue. It is a structural issue. The business may be moving, but it is still costing you too much personally to run.",
       cta:
-        "The next step is to reduce founder dependency, restore strategic clarity, and install the structures your business needs to move forward without constantly pulling you back in.",
+        "The next step is to reduce founder dependency, strengthen management capability, and install the systems required to stabilize performance.",
     };
   }
 
@@ -140,11 +140,11 @@ function getResultType(score: number) {
       title: "Founder Bottleneck",
       shortLabel: "Priority Shift Needed",
       summary:
-        "There is momentum in the business, but too much still flows through you. Your team may be active, but not fully aligned, and progress likely depends on your ongoing involvement.",
+        "The business has momentum, but too much still flows through you. Your managers may be active, but they are not yet creating the ownership and execution needed to truly free you.",
       insight:
-        "At this stage, most founders feel busy, responsible, and stretched — yet still unsure why the business is not moving with more consistency or ease.",
+        "At this stage, most founders feel responsible for everything, even after building a team. Growth continues, but control and clarity do not improve at the same pace.",
       cta:
-        "The next step is to strengthen leadership, accountability, and execution so the business can grow without increasing the pressure on you.",
+        "The next step is to build stronger management systems, clearer accountability, and better execution discipline across the business.",
     };
   }
 
@@ -153,11 +153,11 @@ function getResultType(score: number) {
       title: "Growth Under Pressure",
       shortLabel: "Strong Potential",
       summary:
-        "Your business has meaningful foundations in place, but the internal systems may not yet be strong enough to support growth with full confidence.",
+        "Your business has some meaningful structure in place, but not enough consistency to support growth without pressure. Things work, but not as smoothly as they should.",
       insight:
-        "This is often the stage where growth still happens, but it feels heavier than it should. Without stronger alignment and clearer execution rhythms, scale can begin to create strain.",
+        "This is where many businesses get stuck. Revenue grows, but founder pressure stays high because management ownership, execution rhythm, and internal clarity are still uneven.",
       cta:
-        "The next step is to reinforce clarity, structure, and leadership ownership so growth becomes sustainable rather than stressful.",
+        "The next step is to tighten structure, improve ownership, and create the management discipline needed for sustainable growth.",
     };
   }
 
@@ -165,17 +165,17 @@ function getResultType(score: number) {
     title: "Scale-Ready Foundation",
     shortLabel: "Advanced Stage",
     summary:
-      "Your business appears to have a strong base of clarity, ownership, and operating structure. The challenge now is refinement, not rescue.",
+      "Your business has a solid operating base. The issue is no longer survival or chaos — it is refinement, sharper management, and stronger execution at scale.",
     insight:
-      "At this level, the focus is not on fixing chaos. It is on sharpening leadership, improving strategic execution, and building a business that scales without compromising peace or purpose.",
+      "At this stage, the opportunity is to strengthen what already works, deepen leadership ownership, and ensure growth does not reintroduce founder dependency.",
     cta:
-      "The next step is to strengthen what already works, deepen leadership capability, and create the systems that support the next level of growth.",
+      "The next step is to refine management capability, improve strategic execution, and prepare the business for its next level of growth.",
   };
 }
 
 function getInsightStatus(score: number) {
   if (score >= 4) return "Strong";
-  if (score >= 3) return "Moderate";
+  if (score >= 3) return "Unstable";
   return "Needs Attention";
 }
 
@@ -211,8 +211,9 @@ export default function HomePage() {
 
   const isHighValue =
     totalScore <= 22 ||
-    formData.stage.toLowerCase().includes("established") ||
-    formData.stage.toLowerCase().includes("scaling");
+  formData.stage.includes("50–100") ||
+  formData.stage.includes("100–200") ||
+  formData.stage.includes("200+");
 
   const weakestInsight = useMemo(() => {
     const completedInsights = insightScores.filter((item) => item.score > 0);
@@ -293,13 +294,17 @@ export default function HomePage() {
             </p>
 
             <h1 className="mt-3 font-[var(--font-montserrat)] text-3xl font-bold leading-tight md:text-5xl">
-              Founder Clarity Diagnostic
+              You built the business. But somewhere along the way, you lost control of it.
             </h1>
 
             <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
-  This is not a typical business assessment. It is a reflection of how your
-  business is really operating — and how that may be impacting you as the founder.
-</p>
+              You’ve hit revenue goals. You have a team. The business looks successful from the outside.
+              But internally, you are still carrying the pressure, the decisions, and the responsibility.
+            </p>
+
+            <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/80">
+              This diagnostic shows you exactly where your business is still dependent on you — and why.
+            </p>
           </div>
 
           <div className="mt-8">
@@ -381,7 +386,7 @@ export default function HomePage() {
                     </button>
 
                     <p className="font-[var(--font-cormorant)] text-lg text-[#1A604B]/70">
-  Choose the answer that feels most true — not what you think it should be.
+  Answer based on reality — not what should be true, but what is actually happening.
 </p>
                   </div>
                 </motion.div>
@@ -401,12 +406,12 @@ export default function HomePage() {
                   <div className="mt-6 space-y-4">
                     {[
                       "Founder Dependency",
-                      "Financial Sustainability",
-                      "Team Ownership",
-                      "Execution Consistency",
-                      "Leadership Depth",
+                      "Founder Load",
+                      "Founder State",
+                      "Management Capability",
+                      "Execution Discipline",
                       "Strategic Clarity",
-                      "Scalability",
+                      "Operational Stability",
                     ].map((item) => (
                       <div
                         key={item}
@@ -425,8 +430,8 @@ export default function HomePage() {
                     Designed for
                   </p>
                   <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
-                    Founder-led and family-run businesses seeking stronger
-                    structure, leadership alignment, and sustainable growth.
+                    For established SME founders with 50+ employees and ₹10Cr+ revenue who are tired of
+                    carrying the business and want stronger execution, ownership, and control.
                   </p>
                 </div>
               </motion.div>
@@ -445,16 +450,15 @@ export default function HomePage() {
               </p>
 
               <h2 className="mt-5 font-[var(--font-montserrat)] text-3xl font-bold leading-tight md:text-4xl">
-                Where should we send your clarity report?
+                See where your business is actually getting stuck
               </h2>
 
               <p className="mt-5 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
-                You’re about to see where your business is actually getting held back.
-                Enter your details to unlock your clarity breakdown.
+                Most founders don’t realise the real problem until they see it clearly.
               </p>
 
               <p className="font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
-                Most founders don’t realise this until they see it clearly.
+                Enter your details to unlock your Founder Clarity Report and see what is slowing the business down.
               </p>
               <form onSubmit={handleLeadSubmit} className="mt-8 grid gap-5">
                 <div>
@@ -534,10 +538,10 @@ export default function HomePage() {
                     required
                   >
                     <option value="">Select your business stage</option>
-                    <option value="Emerging">Emerging</option>
-                    <option value="Growing">Growing</option>
-                    <option value="Established">Established</option>
-                    <option value="Scaling">Scaling</option>
+                    <option value="Under 50 employees">Under 50 employees</option>
+                    <option value="50–100 employees">50–100 employees</option>
+                    <option value="100–200 employees">100–200 employees</option>
+                    <option value="200+ employees">200+ employees</option>
                   </select>
                 </div>
 
@@ -591,10 +595,10 @@ export default function HomePage() {
                 </div>
 
                 <p className="mt-6 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
-                  This is why the business feels heavier than it should.
+                  This is why the business still feels heavier than it should.
                 </p>
                 <p className="mt-3 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
-                  And why growth isn’t translating into clarity or control.
+                  Growth may be happening — but control, ownership, and clarity are not keeping up.
                 </p>
 
                 <p className="mt-8 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
@@ -631,14 +635,14 @@ export default function HomePage() {
                       rel="noreferrer"
                       className="inline-flex items-center justify-center rounded-full bg-[#1A604B] px-8 py-4 font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:opacity-90"
                     >
-                      Fix This At The Root
+                      Book a Strategy Call
                     </a>
                   ) : (
                     <a
                       href="/founder-clarity"
                       className="inline-flex items-center justify-center rounded-full bg-[#1A604B] px-8 py-4 font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:opacity-90"
                     >
-                      Speak With Manarah
+                      See the Next Step
                     </a>
                   )}
 
