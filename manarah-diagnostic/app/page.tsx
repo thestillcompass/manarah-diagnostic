@@ -39,6 +39,7 @@ type FormData = {
   phone: string;
   company: string;
   stage: string;
+  revenueRange: string;
 };
 
 const questions: Question[] = [
@@ -179,6 +180,36 @@ function getInsightStatus(score: number) {
   return "Needs Attention";
 }
 
+function getLeadTemperature(
+  score: number,
+  founderState: string,
+  revenueRange: string
+): "Hot" | "Warm" | "Cold" {
+  if (score <= 22) {
+    return "Hot";
+  }
+
+  if (score >= 30) {
+    if (
+      founderState === "stable" &&
+      (revenueRange === "₹10-25 Cr" || revenueRange === "₹25+ Cr")
+    ) {
+      return "Warm";
+    }
+    return "Cold";
+  }
+
+  if (
+    founderState === "dependency" ||
+    founderState === "inconsistent" ||
+    revenueRange === "₹25+ Cr"
+  ) {
+    return "Hot";
+  }
+
+  return "Warm";
+}
+
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -190,6 +221,7 @@ export default function HomePage() {
     phone: "",
     company: "",
     stage: "",
+    revenueRange: "",
   });
 
   const currentQuestion = questions[currentIndex];
@@ -255,14 +287,67 @@ export default function HomePage() {
     }
   };
 
-  const handleLeadSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.name || !formData.email) return;
 
-    // TODO:
-    // Send formData + answers + totalScore + insightScores + result.title to your API route
-    // Push into Zoho CRM
+    const teamSizeToZoho = formData.stage || "";
+
+    const founderStateMap: Record<string, string> = {
+      "Business depends on me": "dependency",
+      "The business depends on me more than I expected": "dependency",
+      "I thought I could step back, but I can’t": "dependency",
+      "Team is inconsistent": "inconsistent",
+      "We have systems, but they don’t fully work": "inconsistent",
+      "Growth feels heavy": "growth_heavy",
+      "Things are stable": "stable",
+    };
+
+    const weakestAreaApiValue = weakestInsight?.area ?? "";
+    const founderStateValue = founderStateMap[result.title] || "";
+    const leadTemperature = getLeadTemperature(
+      totalScore,
+      founderStateValue,
+      formData.revenueRange
+    );
+
+    let intentTag = "Low Urgency";
+
+    if (
+      weakestAreaApiValue === "Management Capability" ||
+      weakestAreaApiValue === "Firefighting"
+    ) {
+      intentTag = "Execution Problem";
+    }
+
+    if (totalScore <= 22) {
+      intentTag = "High Intent";
+    }
+
+    await fetch("/api/zoho/lead", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+
+        teamSize: teamSizeToZoho,
+        revenueRange: formData.revenueRange,
+        founderState: founderStateValue,
+
+        score: totalScore,
+        weakestArea: weakestAreaApiValue,
+        resultType: result.title,
+
+        temperature: leadTemperature,
+        intentTag,
+      }),
+    });
 
     setShowLeadCapture(false);
     setShowResults(true);
@@ -279,6 +364,7 @@ export default function HomePage() {
       phone: "",
       company: "",
       stage: "",
+      revenueRange: "",
     });
   };
 
@@ -525,24 +611,49 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="mt-5">
-                  <label className="mb-2 block font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-[#1A604B]/65">
-                    Business Stage
-                  </label>
-                  <select
-                    value={formData.stage}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, stage: e.target.value }))
-                    }
-                    className="w-full rounded-2xl border border-[#1A604B]/12 bg-[#F6F1E8] px-5 py-4 font-[var(--font-cormorant)] text-2xl text-[#1A604B] outline-none transition focus:border-[#1A604B]/30"
-                    required
-                  >
-                    <option value="">Select your business stage</option>
-                    <option value="Under 50 employees">Under 50 employees</option>
-                    <option value="50–100 employees">50–100 employees</option>
-                    <option value="100–200 employees">100–200 employees</option>
-                    <option value="200+ employees">200+ employees</option>
-                  </select>
+                <div className="mt-5 grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-[#1A604B]/65">
+                      Business Stage
+                    </label>
+                    <select
+                      value={formData.stage}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, stage: e.target.value }))
+                      }
+                      className="w-full rounded-2xl border border-[#1A604B]/12 bg-[#F6F1E8] px-5 py-4 font-[var(--font-cormorant)] text-2xl text-[#1A604B] outline-none transition focus:border-[#1A604B]/30"
+                      required
+                    >
+                      <option value="">Select your business stage</option>
+                      <option value="Under 50 employees">Under 50 employees</option>
+                      <option value="50–100 employees">50–100 employees</option>
+                      <option value="100–200 employees">100–200 employees</option>
+                      <option value="200+ employees">200+ employees</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-[#1A604B]/65">
+                      Revenue Range
+                    </label>
+                    <select
+                      value={formData.revenueRange}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          revenueRange: e.target.value,
+                        }))
+                      }
+                      className="w-full rounded-2xl border border-[#1A604B]/12 bg-[#F6F1E8] px-5 py-4 font-[var(--font-cormorant)] text-2xl text-[#1A604B] outline-none transition focus:border-[#1A604B]/30"
+                      required
+                    >
+                      <option value="">Select your revenue range</option>
+                      <option value="Under ₹5 Cr">Under ₹5 Cr</option>
+                      <option value="₹5-10 Cr">₹5-10 Cr</option>
+                      <option value="₹10-25 Cr">₹10-25 Cr</option>
+                      <option value="₹25+ Cr">₹25+ Cr</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
