@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Montserrat, Cormorant_Garamond } from "next/font/google";
 
@@ -223,6 +223,15 @@ export default function HomePage() {
     stage: "",
     revenueRange: "",
   });
+  const [source, setSource] = useState("website");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sourceParam = params.get("source");
+    if (sourceParam) {
+      setSource(sourceParam);
+    }
+  }, []);
 
   const currentQuestion = questions[currentIndex];
   const answeredCount = Object.keys(answers).length;
@@ -290,6 +299,11 @@ export default function HomePage() {
   const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!formData.email.includes("@")) {
+      alert("Please enter a valid email");
+      return;
+    }
+
     if (!formData.name || !formData.email) return;
 
     const teamSizeToZoho = formData.stage || "";
@@ -335,6 +349,7 @@ export default function HomePage() {
         email: formData.email,
         phone: formData.phone,
         company: formData.company,
+        source,
 
         teamSize: teamSizeToZoho,
         revenueRange: formData.revenueRange,
@@ -569,13 +584,14 @@ export default function HomePage() {
                   </label>
                   <input
                     type="email"
+                    required
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     value={formData.email}
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, email: e.target.value }))
                     }
                     className="w-full rounded-2xl border border-[#1A604B]/12 bg-[#F6F1E8] px-5 py-4 font-[var(--font-cormorant)] text-2xl text-[#1A604B] outline-none transition focus:border-[#1A604B]/30"
                     placeholder="name@company.com"
-                    required
                   />
                 </div>
 
