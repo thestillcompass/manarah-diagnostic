@@ -215,22 +215,31 @@ export default function HomePage() {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showLeadCapture, setShowLeadCapture] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     company: "",
     stage: "",
     revenueRange: "",
+    founderState: "",
+    source: "website",
   });
-  const [source, setSource] = useState("website");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const sourceParam = params.get("source");
-    if (sourceParam) {
-      setSource(sourceParam);
-    }
+    const source = params.get("source");
+    const team = params.get("team");
+    const revenue = params.get("revenue");
+    const state = params.get("state");
+
+    setFormData((prev) => ({
+      ...prev,
+      stage: team || prev.stage,
+      revenueRange: revenue || prev.revenueRange,
+      founderState: state || prev.founderState,
+      source: source || prev.source,
+    }));
   }, []);
 
   const currentQuestion = questions[currentIndex];
@@ -349,16 +358,13 @@ export default function HomePage() {
         email: formData.email,
         phone: formData.phone,
         company: formData.company,
-        source,
-
+        source: formData.source,
         teamSize: teamSizeToZoho,
         revenueRange: formData.revenueRange,
         founderState: founderStateValue,
-
         score: totalScore,
         weakestArea: weakestAreaApiValue,
         resultType: result.title,
-
         temperature: leadTemperature,
         intentTag,
       }),
@@ -380,6 +386,8 @@ export default function HomePage() {
       company: "",
       stage: "",
       revenueRange: "",
+      founderState: "",
+      source: "website",
     });
   };
 

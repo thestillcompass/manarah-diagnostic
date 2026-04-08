@@ -29,12 +29,47 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Diagnostic submission received:", body);
+    // Build outgoing payload as specified
+    const {
+      name,
+      email,
+      phone,
+      company,
+      source,
+      stage,
+      revenueRange,
+      founderState,
+      score,
+      weakestArea,
+      resultType,
+      temperature,
+      intentTag,
+    } = body;
+
+    const outgoingPayload = {
+      name,
+      email,
+      phone,
+      company,
+      source,
+      teamSize: stage,
+      revenueRange,
+      founderState,
+      score,
+      weakestArea,
+      resultType,
+      temperature,
+      intentTag,
+    };
+
+    console.log("Diagnostic outgoing payload:", outgoingPayload);
+
+    // You can forward outgoingPayload to another service here if needed
 
     return NextResponse.json({
       success: true,
       message: "Diagnostic submitted successfully",
-      source: body.source,
+      data: outgoingPayload,
     });
   } catch (error) {
     console.error("API error:", error);
