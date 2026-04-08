@@ -232,6 +232,7 @@ export default function HomePage() {
     const team = params.get("team");
     const revenue = params.get("revenue");
     const state = params.get("state");
+    console.log("STATE PARAM:", state);
 
     setFormData((prev) => ({
       ...prev,
