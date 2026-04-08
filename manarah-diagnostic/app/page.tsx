@@ -40,6 +40,8 @@ type FormData = {
   company: string;
   stage: string;
   revenueRange: string;
+  founderState: string;
+  source: string;
 };
 
 const questions: Question[] = [
@@ -215,32 +217,35 @@ export default function HomePage() {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showLeadCapture, setShowLeadCapture] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    stage: "",
-    revenueRange: "",
-    founderState: "",
-    source: "website",
-  });
+  const [formData, setFormData] = useState<FormData>({
+  name: "",
+  email: "",
+  phone: "",
+  company: "",
+  stage: "",
+  revenueRange: "",
+  founderState: "",
+  source: "website",
+});
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const source = params.get("source");
-    const team = params.get("team");
-    const revenue = params.get("revenue");
-    const state = params.get("state");
+  const params = new URLSearchParams(window.location.search);
 
-    setFormData((prev) => ({
-      ...prev,
-      stage: team || prev.stage,
-      revenueRange: revenue || prev.revenueRange,
-      founderState: state || prev.founderState,
-      source: source || prev.source,
-    }));
-  }, []);
+  const source = params.get("source");
+  const team = params.get("team");
+  const revenue = params.get("revenue");
+  const state = params.get("state");
+
+  console.log("URL PARAMS:", { source, team, revenue, state });
+
+  setFormData((prev) => ({
+    ...prev,
+    source: source || prev.source,
+    stage: team || prev.stage,
+    revenueRange: revenue || prev.revenueRange,
+    founderState: state || prev.founderState,
+  }));
+}, []);
 
   const currentQuestion = questions[currentIndex];
   const answeredCount = Object.keys(answers).length;
@@ -328,7 +333,7 @@ export default function HomePage() {
     };
 
     const weakestAreaApiValue = weakestInsight?.area ?? "";
-    const founderStateValue = founderStateMap[result.title] || "";
+    const founderStateValue = formData.founderState || "";
     const leadTemperature = getLeadTemperature(
       totalScore,
       founderStateValue,
@@ -347,6 +352,10 @@ export default function HomePage() {
     if (totalScore <= 22) {
       intentTag = "High Intent";
     }
+
+    console.log("FORM DATA BEFORE SUBMIT:", formData);
+    console.log("teamSizeToZoho:", teamSizeToZoho);
+    console.log("founderStateValue:", founderStateValue);
 
     await fetch("/api/zoho/lead", {
       method: "POST",
