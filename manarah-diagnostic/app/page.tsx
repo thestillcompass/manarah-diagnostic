@@ -347,6 +347,7 @@ export default function HomePage() {
       weakestAreaApiValue === "Firefighting"
     ) {
       intentTag = "Execution Problem";
+      
     }
 
     if (totalScore <= 22) {
@@ -774,7 +775,7 @@ export default function HomePage() {
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   {isHighValue ? (
                     <a
-                      href="https://your-calendly-link"
+                      href="https://zbooking.in/oJB2P"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center justify-center rounded-full bg-[#1A604B] px-8 py-4 font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:opacity-90"
