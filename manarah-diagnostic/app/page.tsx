@@ -215,9 +215,7 @@ function getLeadTemperature(
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    trackEvent("quiz_started");
-  }, []);
+  // Removed quiz_started from useEffect. Will trigger on first answer.
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showLeadCapture, setShowLeadCapture] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -290,6 +288,10 @@ export default function HomePage() {
   );
 
   const handleAnswer = (value: number) => {
+    // Fire quiz_started only on first interaction
+    if (currentIndex === 0) {
+      trackEvent("quiz_started");
+    }
     const updatedAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(updatedAnswers);
 
