@@ -1,5 +1,5 @@
 "use client";
-
+import { trackEvent } from "@/lib/gtag";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Montserrat, Cormorant_Garamond } from "next/font/google";
@@ -214,6 +214,10 @@ function getLeadTemperature(
 
 export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    trackEvent("quiz_started");
+  }, []);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showLeadCapture, setShowLeadCapture] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -270,6 +274,7 @@ export default function HomePage() {
   formData.stage.includes("100–200") ||
   formData.stage.includes("200+");
 
+
   const weakestInsight = useMemo(() => {
     const completedInsights = insightScores.filter((item) => item.score > 0);
     if (completedInsights.length === 0) return null;
@@ -277,6 +282,12 @@ export default function HomePage() {
     const sorted = [...completedInsights].sort((a, b) => a.score - b.score);
     return sorted[0];
   }, [insightScores]);
+
+  const founderStateValue = formData.founderState || "";
+  const leadTemperature = useMemo(
+    () => getLeadTemperature(totalScore, founderStateValue, formData.revenueRange),
+    [totalScore, founderStateValue, formData.revenueRange]
+  );
 
   const handleAnswer = (value: number) => {
     const updatedAnswers = { ...answers, [currentQuestion.id]: value };
@@ -333,12 +344,7 @@ export default function HomePage() {
     };
 
     const weakestAreaApiValue = weakestInsight?.area ?? "";
-    const founderStateValue = formData.founderState || "";
-    const leadTemperature = getLeadTemperature(
-      totalScore,
-      founderStateValue,
-      formData.revenueRange
-    );
+    // founderStateValue and leadTemperature are now available at the top level
 
     let intentTag = "Low Urgency";
 
@@ -357,6 +363,11 @@ export default function HomePage() {
     console.log("FORM DATA BEFORE SUBMIT:", formData);
     console.log("teamSizeToZoho:", teamSizeToZoho);
     console.log("founderStateValue:", founderStateValue);
+
+    trackEvent("form_submitted", {
+      lead_temperature: leadTemperature,
+      source: formData.source,
+    });
 
     await fetch("/api/zoho/lead", {
       method: "POST",
@@ -382,6 +393,10 @@ export default function HomePage() {
 
     setShowLeadCapture(false);
     setShowResults(true);
+    trackEvent("quiz_completed", {
+      result_type: result.title,
+      score: totalScore,
+    });
   };
 
   const resetAssessment = () => {
@@ -779,6 +794,12 @@ export default function HomePage() {
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center justify-center rounded-full bg-[#1A604B] px-8 py-4 font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:opacity-90"
+                      onClick={() =>
+                        trackEvent("booking_clicked", {
+                          source: formData.source,
+                          lead_temperature: leadTemperature,
+                        })
+                      }
                     >
                       Book a Strategy Call
                     </a>
