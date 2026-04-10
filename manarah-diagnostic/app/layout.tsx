@@ -32,7 +32,7 @@ export default function RootLayout({
         {children}
 
         <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX`}
+          src={`https://www.googletagmanager.com/gtag/js?id=G-9YMS1YQ4X4`}
           strategy="afterInteractive"
         />
 
