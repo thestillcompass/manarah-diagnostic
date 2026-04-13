@@ -1,6 +1,6 @@
 "use client";
 import { trackEvent } from "@/lib/gtag";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Montserrat, Cormorant_Garamond } from "next/font/google";
 
@@ -213,6 +213,7 @@ function getLeadTemperature(
 }
 
 export default function HomePage() {
+  const quizRef = useRef<HTMLDivElement | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Removed quiz_started from useEffect. Will trigger on first answer.
@@ -472,6 +473,7 @@ export default function HomePage() {
               <div className="grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
               <AnimatePresence mode="wait">
                 <motion.div
+                  ref={quizRef}
                   key={currentQuestion.id}
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -728,7 +730,12 @@ export default function HomePage() {
                     If you’ve already built success but still feel the pressure, this is the next step.
                   </p>
 
-                  <button className="mt-8 rounded-full bg-[#1A604B] px-10 py-4 text-lg text-white hover:bg-[#154c3c]">
+                  <button
+                    onClick={() =>
+                      quizRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+                    }
+                    className="mt-8 rounded-full bg-[#1A604B] px-10 py-4 text-lg text-white hover:bg-[#154c3c]"
+                  >
                     Get My Founder Dependency Score
                   </button>
 
@@ -736,7 +743,7 @@ export default function HomePage() {
                     Only relevant for founders serious about reducing dependency and building a business that runs without them.
                   </p>
 
-                  <p className="mt-4 text-xs text-[#1A604B]/50">
+                  <p className="mt-4 text-[15px] text-[#1A604B]/50">
                     Limited weekly slots to ensure depth of engagement.
                   </p>
                 </section>
