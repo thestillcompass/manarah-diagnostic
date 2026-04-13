@@ -48,7 +48,7 @@ const questions: Question[] = [
   {
     id: 1,
     area: "Founder Dependency",
-    text: "If you step away from your business for 5 days, what actually happens?",
+    text: "If you disappeared from the business for 5 days, what would actually break first?",
     options: [
       { label: "Everything slows down or stops", value: 1 },
       { label: "Things move, but I’m still involved remotely", value: 2 },
@@ -219,6 +219,7 @@ export default function HomePage() {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showLeadCapture, setShowLeadCapture] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [dynamicHook, setDynamicHook] = useState("");
   const [formData, setFormData] = useState<FormData>({
   name: "",
   email: "",
@@ -247,6 +248,16 @@ export default function HomePage() {
     revenueRange: revenue || prev.revenueRange,
     founderState: state || prev.founderState,
   }));
+
+  if (state === "dependency") {
+    setDynamicHook("Your business still depends on you more than it should.");
+  } else if (state === "inconsistent") {
+    setDynamicHook("Your team is not executing consistently without you.");
+  } else if (state === "growth_heavy") {
+    setDynamicHook("Growth is happening — but it feels heavier, not easier.");
+  } else {
+    setDynamicHook("");
+  }
 }, []);
 
   const currentQuestion = questions[currentIndex];
@@ -426,44 +437,30 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-10 md:px-10">
           <div className="max-w-3xl">
             <p className="font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.24em] text-[#1A604B]/60">
-              Manarah Consultants
-            </p>
+  For founders of ₹10Cr+ businesses
+</p>
 
-            <h1 className="mt-3 font-[var(--font-montserrat)] text-3xl font-bold leading-tight md:text-5xl">
-              You built the business. But somewhere along the way, you lost control of it.
-            </h1>
+<h1 className="mt-3 font-[var(--font-montserrat)] text-3xl font-bold leading-tight md:text-5xl">
+  You built a successful business. But now the business runs you.
+</h1>
 
-            <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
-              You’ve hit revenue goals. You have a team. The business looks successful from the outside.
-              But internally, you are still carrying the pressure, the decisions, and the responsibility.
-            </p>
+{dynamicHook && (
+  <p className="mt-4 text-lg text-[#1A604B]/70">
+    {dynamicHook}
+  </p>
+)}
 
-            <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/80">
-              This diagnostic shows you exactly where your business is still dependent on you — and why.
-            </p>
-          </div>
+<p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
+  You’ve already solved revenue. From the outside, it looks like you’ve made it.
+</p>
 
-          <div className="mt-8">
-            <div className="h-2 w-full rounded-full bg-[#1A604B]/10">
-              <div
-                className="h-2 rounded-full bg-[#1A604B] transition-all duration-500 ease-out"
-                style={{ width: `${showResults ? 100 : progress}%` }}
-              />
-            </div>
+<p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/80">
+  But internally, you’re still carrying the decisions, the pressure, and the weight of the business — while your team struggles to truly take ownership.
+</p>
 
-            <div className="mt-3 flex items-center justify-between">
-              <p className="font-[var(--font-montserrat)] text-xs uppercase tracking-[0.18em] text-[#1A604B]/55">
-                {showResults
-                  ? "Assessment complete"
-                  : showLeadCapture
-                    ? "One final step"
-                    : `Question ${currentIndex + 1} of ${questions.length}`}
-              </p>
-
-              <p className="font-[var(--font-montserrat)] text-xs uppercase tracking-[0.18em] text-[#1A604B]/55">
-                {showResults ? "100%" : `${progress}%`}
-              </p>
-            </div>
+<p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/80">
+  This diagnostic reveals your <span className="font-semibold">Founder Dependency Score™</span> and shows whether the real issue lies in your <span className="font-semibold">Purpose, People, Performance, or Profit</span>.
+</p>
           </div>
         </div>
       </section>
@@ -471,7 +468,8 @@ export default function HomePage() {
       <section>
         <div className="mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-16">
           {!showLeadCapture && !showResults && (
-            <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+            <>
+              <div className="grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentQuestion.id}
@@ -481,9 +479,24 @@ export default function HomePage() {
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   className="rounded-[2rem] border border-[#1A604B]/10 bg-white/70 p-8 shadow-[0_18px_60px_rgba(26,96,75,0.08)] backdrop-blur-sm md:p-10"
                 >
-                  <p className="font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.22em] text-[#C1A77C]">
-                    {currentQuestion.area}
-                  </p>
+                  <div>
+                    <div className="h-2 w-full rounded-full bg-[#1A604B]/10">
+                      <div
+                        className="h-2 rounded-full bg-[#1A604B] transition-all duration-500 ease-out"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between">
+                      <p className="font-[var(--font-montserrat)] text-xs uppercase tracking-[0.18em] text-[#1A604B]/55">
+                        {`Question ${currentIndex + 1} of ${questions.length}`}
+                      </p>
+
+                      <p className="font-[var(--font-montserrat)] text-xs uppercase tracking-[0.18em] text-[#1A604B]/55">
+                        {`${progress}%`}
+                      </p>
+                    </div>
+                  </div>
 
                   <h2 className="mt-5 font-[var(--font-montserrat)] text-2xl font-bold leading-tight md:text-4xl">
                     {currentQuestion.text}
@@ -522,7 +535,7 @@ export default function HomePage() {
                     </button>
 
                     <p className="font-[var(--font-cormorant)] text-lg text-[#1A604B]/70">
-  Answer based on reality — not what should be true, but what is actually happening.
+  Answer honestly — not based on what should be true, but what is actually happening inside the business.
 </p>
                   </div>
                 </motion.div>
@@ -536,25 +549,49 @@ export default function HomePage() {
               >
                 <div className="rounded-[2rem] bg-[#1A604B] p-8 text-[#F6F1E8] shadow-[0_18px_60px_rgba(26,96,75,0.12)]">
                   <p className="font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.2em] text-[#C1A77C]">
-                    What this assesses
+                    The Founder Freedom System™
+                  </p>
+
+                  <p className="mt-5 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#F6F1E8]/90">
+                    Most consulting tries to fix the business from the outside.
+                  </p>
+
+                  <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#F6F1E8]/90">
+                    We don’t.
+                  </p>
+
+                  <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#F6F1E8]/90">
+                    Because the real problem is not just the business. It’s how the business has been built around the founder.
                   </p>
 
                   <div className="mt-6 space-y-4">
                     {[
-                      "Founder Dependency",
-                      "Founder Load",
-                      "Founder State",
-                      "Management Capability",
-                      "Execution Discipline",
-                      "Strategic Clarity",
-                      "Operational Stability",
+                      {
+                        title: "Purpose",
+                        copy: "Why the founder has lost direction, clarity, or meaning after achieving success.",
+                      },
+                      {
+                        title: "People",
+                        copy: "Why managers are not truly owning execution, accountability, and decisions.",
+                      },
+                      {
+                        title: "Performance",
+                        copy: "Why the business keeps slipping into inconsistency, firefighting, and dependency.",
+                      },
+                      {
+                        title: "Profit",
+                        copy: "Why growth exists — but still feels heavy, fragile, or unfulfilling.",
+                      },
                     ].map((item) => (
                       <div
-                        key={item}
+                        key={item.title}
                         className="rounded-2xl border border-white/10 px-4 py-4 transition duration-200 hover:bg-white/5"
                       >
-                        <p className="font-[var(--font-cormorant)] text-2xl leading-relaxed">
-                          {item}
+                        <p className="font-[var(--font-montserrat)] text-sm font-semibold uppercase tracking-[0.14em] text-[#C1A77C]">
+                          {item.title}
+                        </p>
+                        <p className="mt-2 font-[var(--font-cormorant)] text-xl leading-relaxed text-[#F6F1E8]/92">
+                          {item.copy}
                         </p>
                       </div>
                     ))}
@@ -562,16 +599,150 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-[2rem] border border-[#1A604B]/10 bg-[#EFE4D2] p-8 shadow-[0_18px_50px_rgba(26,96,75,0.04)]">
-                  <p className="font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.2em] text-[#1A604B]/60">
-                    Designed for
-                  </p>
-                  <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
-                    For established SME founders with 50+ employees and ₹10Cr+ revenue who are tired of
-                    carrying the business and want stronger execution, ownership, and control.
-                  </p>
-                </div>
+  <p className="font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.2em] text-[#1A604B]/60">
+    What this really solves
+  </p>
+  <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
+    This is not a motivation problem. And it is not just an operational issue.
+  </p>
+  <p className="mt-4 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
+    It is a founder dependency problem — where the founder carries too much, managers own too little, and growth keeps coming at a personal cost.
+  </p>
+</div>
               </motion.div>
             </div>
+
+              <section className="mt-24 text-center">
+                <h2 className="font-[var(--font-montserrat)] text-3xl font-bold md:text-4xl">
+                  Get Your Founder Dependency Score™
+                </h2>
+
+                <p className="mt-6 font-[var(--font-cormorant)] text-2xl text-[#1A604B]/85">
+                  In less than 3 minutes, this diagnostic reveals how dependent your business still is on you — and where that dependency is actually coming from.
+                </p>
+
+                <div className="mt-10 grid gap-4 md:grid-cols-2">
+                  {[
+                    "Founder Dependency Score™",
+                    "Weakest Pressure Area",
+                    "Execution & Management Gaps",
+                    "Recommended Next Step",
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-xl border border-[#1A604B]/10 bg-white px-6 py-4 text-lg text-[#1A604B]"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="mt-24">
+                <div className="mx-auto max-w-5xl">
+                <section>
+                  <h2 className="text-center font-[var(--font-montserrat)] text-3xl font-bold md:text-4xl">
+                    What this actually fixes
+                  </h2>
+
+                  <div className="mt-12 grid gap-10 md:grid-cols-2">
+                    <div>
+                      <h3 className="font-semibold text-[#1A604B]">On the founder side</h3>
+                      <ul className="mt-4 space-y-3 text-lg text-[#1A604B]/85">
+                        <li>Constant mental overload and decision fatigue</li>
+                        <li>Loss of purpose after achieving revenue success</li>
+                        <li>Feeling stuck in operations instead of strategy</li>
+                        <li>Growth at the cost of time, health, and clarity</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="font-semibold text-[#1A604B]">On the business side</h3>
+                      <ul className="mt-4 space-y-3 text-lg text-[#1A604B]/85">
+                        <li>Managers who cannot truly run departments</li>
+                        <li>No real KPI-based accountability</li>
+                        <li>Inconsistent execution and firefighting</li>
+                        <li>A business that still depends on the founder</li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="mt-24 rounded-[2rem] bg-[#F8F5F0] p-10">
+                  <h2 className="text-center font-[var(--font-montserrat)] text-3xl font-bold md:text-4xl">
+                    What you actually walk away with
+                  </h2>
+
+                  <div className="mt-10 grid gap-6 md:grid-cols-2">
+                    {[
+                      "A 3-year strategic growth roadmap",
+                      "Department-level KPIs and accountability systems",
+                      "Clear management structures and ownership",
+                      "Execution rhythms and performance tracking",
+                      "A culture blueprint aligned to your vision",
+                      "A business that runs with less founder dependency",
+                    ].map((item) => (
+                      <div
+                        key={item}
+                        className="rounded-xl border border-[#1A604B]/10 bg-white px-6 py-4 text-lg text-[#1A604B]"
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="mt-24 rounded-[2rem] bg-[#F8F5F0] p-10">
+                  <h2 className="text-center font-[var(--font-montserrat)] text-3xl font-bold md:text-4xl">
+                    What changes
+                  </h2>
+
+                  <div className="mt-10 grid gap-6 md:grid-cols-2">
+                    {[
+                      ["Founder stuck in operations", "Founder focused on strategy"],
+                      ["Managers dependent on founder", "Managers accountable and capable"],
+                      ["Constant firefighting", "Structured execution"],
+                      ["Growth feels heavy", "Growth feels controlled and scalable"],
+                      ["Success costing life", "Success aligned with freedom"],
+                    ].map(([before, after]) => (
+                      <div
+                        key={before}
+                        className="rounded-xl border border-[#1A604B]/10 bg-white p-6"
+                      >
+                        <p className="text-sm text-[#1A604B]/60">Before</p>
+                        <p className="text-lg text-[#1A604B]">{before}</p>
+
+                        <p className="mt-4 text-sm text-[#1A604B]/60">After</p>
+                        <p className="text-lg font-semibold text-[#1A604B]">{after}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="mt-24 text-center">
+                  <h2 className="font-[var(--font-montserrat)] text-3xl font-bold md:text-4xl">
+                    See what is still keeping your business dependent on you
+                  </h2>
+
+                  <p className="mt-6 font-[var(--font-cormorant)] text-2xl text-[#1A604B]/85">
+                    If you’ve already built success but still feel the pressure, this is the next step.
+                  </p>
+
+                  <button className="mt-8 rounded-full bg-[#1A604B] px-10 py-4 text-lg text-white hover:bg-[#154c3c]">
+                    Get My Founder Dependency Score
+                  </button>
+
+                  <p className="mt-4 text-sm text-[#1A604B]/60">
+                    Only relevant for founders serious about reducing dependency and building a business that runs without them.
+                  </p>
+
+                  <p className="mt-4 text-xs text-[#1A604B]/50">
+                    Limited weekly slots to ensure depth of engagement.
+                  </p>
+                </section>
+                </div>
+              </section>
+            </>
           )}
 
           {showLeadCapture && !showResults && (
@@ -586,16 +757,16 @@ export default function HomePage() {
               </p>
 
               <h2 className="mt-5 font-[var(--font-montserrat)] text-3xl font-bold leading-tight md:text-4xl">
-                See where your business is actually getting stuck
-              </h2>
+  Unlock your Founder Dependency Score™
+</h2>
 
               <p className="mt-5 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
-                Most founders don’t realise the real problem until they see it clearly.
-              </p>
+  Most founders think the issue is growth.
+</p>
 
-              <p className="font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
-                Enter your details to unlock your Founder Clarity Report and see what is slowing the business down.
-              </p>
+<p className="font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/85">
+  This will show you whether the real pressure is coming from Purpose, People, Performance, or Profit — and how dependent the business still is on you.
+</p>
               <form onSubmit={handleLeadSubmit} className="mt-8 grid gap-5">
                 <div>
                   <label className="mb-2 block font-[var(--font-montserrat)] text-xs font-semibold uppercase tracking-[0.16em] text-[#1A604B]/65">
@@ -761,6 +932,27 @@ export default function HomePage() {
                 </p>
                 <p className="mt-3 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
                   Growth may be happening — but control, ownership, and clarity are not keeping up.
+                </p>
+
+                <p className="mt-6 text-xl text-[#1A604B]">
+                  This pattern does not fix itself.
+                </p>
+
+                <p className="mt-2 text-lg text-[#1A604B]/80">
+                  If nothing changes, your business will continue to depend on you — even as it grows.
+                </p>
+
+                <a
+                  href="https://bookings.zoho.in/..."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-8 inline-block rounded-full bg-[#1A604B] px-8 py-4 text-white"
+                >
+                  Book a Founder Strategy Call
+                </a>
+
+                <p className="mt-3 text-sm text-[#1A604B]/60">
+                  45-min private strategy session. No generic advice. Only for serious founders.
                 </p>
 
                 <p className="mt-8 font-[var(--font-cormorant)] text-2xl leading-relaxed text-[#1A604B]/88">
