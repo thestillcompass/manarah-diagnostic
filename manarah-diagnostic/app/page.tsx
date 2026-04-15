@@ -949,14 +949,6 @@ export default function HomePage() {
                   If nothing changes, your business will continue to depend on you — even as it grows.
                 </p>
 
-                <a
-                  href="https://bookings.zoho.in/..."
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-8 inline-block rounded-full bg-[#1A604B] px-8 py-4 text-white"
-                >
-                  Book a Founder Strategy Call
-                </a>
 
                 <p className="mt-3 text-sm text-[#1A604B]/60">
                   45-min private strategy session. No generic advice. Only for serious founders.
